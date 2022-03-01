@@ -7,36 +7,7 @@ async function RequestApi() {
     console.log(data);
     UsarApi(data)
 }
-//Generamos un numero aleatorio
-// function generarnumero(){
-// let numero = Math.floor((Math.random() * 3));
-// if (numero=0){
-//     a=0;
-//     b=1;
-//     c=2;
-//     d=3
-// }
-// else if (numero=1){
-//     a=1;
-//     b=2;
-//     c=3;
-//     d=0  
-// }
-// else if (numero=2){
-//     a=2;
-//     b=1;
-//     c=3;
-//     d=0  
-// }
-// else if (numero=3){
-//     a=3;
-//     b=1;
-//     c=0;
-//     d=2 ;
-// }
-// }
-// generarnumero()
-//Metemos lo que va hacer la funcion
+
 let respuestascorrectas=0
 let numeropreguntas=0 
 
@@ -86,29 +57,3 @@ function respuestasclick(){
 function MostrarResultado(){
 alert("total aciertos="+respuestascorrectas)
 }
-// let a = []
-// let b = []
-// let c = []
-// let d = []
-
-// function generarnumero() {
-//     let numero = Math.floor((Math.random() * 3));
-//     if (numero == 0) {
-//         return [a = 0, b = 1, c = 2, d = 3]
-//     }
-//     else if (numero == 1) {
-//         return [a = 1, b = 0, c = 2, d = 3]
-//     }
-//     else if (numero == 2) {
-//         return [a = 3, b = 1, c = 2, d = 0]
-//     }
-//     else {
-//         return [a = 2, b = 2, c = 1, d = 3]
-//     }
-// }
-// generarnumero()
-// console.log(a)
-
-//     }
-//     generarnumero()
-//     console.log(a)
