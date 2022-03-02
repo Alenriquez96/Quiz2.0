@@ -8,6 +8,8 @@ async function RequestApi() {
     UsarApi(data)
 }
 
+
+
 let respuestascorrectas=0
 let numeropreguntas=0 
 
@@ -57,3 +59,16 @@ function respuestasclick(){
 function MostrarResultado(){
 alert("total aciertos="+respuestascorrectas)
 }
+
+
+
+
+//GRÁFICA
+
+let grafica = {
+    labels: [0,1,2,3,4,5],
+    series: [
+      [5, 2, 4, 2, 0]
+    ]
+  };
+  new Chartist.Line('.ct-chart', grafica);
