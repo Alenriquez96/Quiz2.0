@@ -1,74 +1,80 @@
-window.onload = RequestApi
-//Empezamos con el fetch
-
-async function RequestApi() {
-    let response = await fetch(`https://opentdb.com/api.php?amount=1&type=multiple`);
-    let data = await response.json()
-    console.log(data);
-    UsarApi(data)
+async function generarPreguntas() {
+    let f = await fetch ("https://opentdb.com/api.php?amount=10&type=multiple")
+    let data = await f.json()
+    return data
 }
+//Llamamos a la función asíncrona:
+generarPreguntas().then(function(data) {
+    let results = data.results;
+    
+    //Mapeamos las correctas para hacer log y que nos diga cuales son:
+    let correctas = results.map(x=>x.correct_answer);
+    console.log(correctas);
 
+    //Mapeamos los titulos de las preguntas para después pintarlas en el DOM:
+    let preguntas = results.map(x=>x.question);
+    console.log(preguntas);
+  
+    //Hacemos una función que pinte los títulos y le pasamos por parámetro un número que vaya subiendo a través del addeventlistener:
+    let numero = 0;
+    function escogerPreguntas(n) {
+        let h2 = document.getElementById("h2")
+        h2.innerHTML = preguntas[n]; 
+    }
+    escogerPreguntas(numero);
 
-
-let respuestascorrectas=0
-let numeropreguntas=0 
-
-function UsarApi(data) {
-    let lista=[0,1,2,3];
+    //Esta lista nos sirve para cambiar el orden de las respuestas de forma que no esté la correcta siempre en la misma posición:
+    let lista = [1,3,2,0];
     lista=lista.sort(function(){return Math.random()-0.5});
-    console.log(lista);
-    document.querySelector("#question").innerHTML = `Pregunta: ${data.results[0].question}`
-    let button=document.querySelector(`#answer${lista[0]}`);
-    button.innerHTML = data.results[0].correct_answer
-    button.respuesta=1;
-    button=document.querySelector(`#answer${lista[1]}`);
-
-    button.innerHTML = data.results[0].incorrect_answers[0];
-    button.respuesta=0
-    button=document.querySelector(`#answer${lista[2]}`);
-
-    button.innerHTML = data.results[0].incorrect_answers[1]
-    button.respuesta=0
-
-    button=document.querySelector(`#answer${lista[3]}`);
     
-    button.innerHTML = data.results[0].incorrect_answers[2]
-    button.respuesta=0
-}
-//Que pasa cuando toca el boton correcto?
-let Correcto = document.querySelectorAll("button");
-for(let i=0;i<Correcto.length;i++){
-    Correcto[i].onclick=respuestasclick; 
-    console.log(Correcto[i]); 
-}
-//console.log(Correcto);
-//Correcto.onclick=respuestasclick;
-    
+    //Hacemos una función que pinte las respuestas, y a través de templates le pasamos la lista desordenada, además le pasamos un value:
+    function escogerRespuestas(n,o) {
+        let label0 = document.getElementById(`label${lista[0]}`)
+        label0.innerHTML = n[0];
+        label0.value = n[0];
+        
+        let label1 = document.getElementById(`label${lista[1]}`)
+        label1.innerHTML = n[1];
+        label1.value = n[1];
 
+        let label2 = document.getElementById(`label${lista[2]}`)
+        label2.innerHTML = n[2];
+        label2.value = n[2];
 
-function respuestasclick(){
-    if(this.respuesta==1){
-     respuestascorrectas++
+        let label3 = document.getElementById(`label${lista[3]}`)
+        label3.innerHTML = o;
+        label3.value = o;
     }
-    numeropreguntas++
-    if(numeropreguntas<10){
-     RequestApi()
+    escogerRespuestas(results[numero].incorrect_answers, results[numero].correct_answer);
+
+    //Este es nuestro contador de respuestas correctas:
+    let respuestasCorrectas=0;
+
+    //Estas funciones sirven para checkear la correcta y que el contador sume:
+    let botones = document.querySelectorAll("button");
+    for(let i=0;i<botones.length;i++){
+        botones[i].onclick = respuestasclick;
     }
-    else MostrarResultado()
-}
-function MostrarResultado(){
-alert("total aciertos="+respuestascorrectas)
-}
+    function respuestasclick(){
+        for (let i = 0; i < results.length; i++) {
+            if(this.value == results[i].correct_answer){
+            respuestasCorrectas++;
+            }                 
+        }
+    }
 
+    //Nuestro addeventlistener que tendrá dentro: el número para que suba con cada click y las llamadas a las funciones:
+    document.getElementById("form1").addEventListener("click", function suma(e){
+        e.preventDefault();
 
+        numero++;
+        console.log(numero);
+        escogerPreguntas(numero);
+        escogerRespuestas(results[numero].incorrect_answers,results[numero].correct_answer);
+        lista=lista.sort(function(){return Math.random()-0.5});
 
+        console.log(lista);
 
-//GRÁFICA
-
-let grafica = {
-    labels: [0,1,2,3,4,5],
-    series: [
-      [5, 2, 4, 2, 0]
-    ]
-  };
-  new Chartist.Line('.ct-chart', grafica);
+        console.log(respuestasCorrectas);
+    });
+})
