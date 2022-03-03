@@ -33,7 +33,6 @@ generarPreguntas().then(function(data) {
         label0.innerHTML = n[0];
         label0.value = n[0];
         
-
         let label1 = document.getElementById(`label${lista[1]}`)
         label1.innerHTML = n[1];
         label1.value = n[1];
