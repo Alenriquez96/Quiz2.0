@@ -14,13 +14,8 @@ body {
     background-color: #F8F005;
     margin: 0;
   }
-#divQuiz{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
-}
-h3{
+h1{
     margin: 0 0 20px 0;
     font-family: 'Bebas Neue', cursive;
     font-size: 40px;
@@ -31,28 +26,38 @@ h3{
                           8px 8px #ff1f8f,
                           20px 20px #000000;
   }
+h2{
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 5px;
+  text-align: center;
+  margin: 7px 0;
+}
 
 fieldset{
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    justify-content: center;  
+    width: 70vh;  
 }
 
-#question{
-    font-family: 'Bebas Neue', cursive;
-    font-size: 20px;
-    text-align: center;
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Homehtml */
 #divHome1{
-    height: 50vh;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 #divHome2{
-    height: 50vh;
-}
+  height: 50vh;
 
+}
 
 
 /* Estilos de los botones */
