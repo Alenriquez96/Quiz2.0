@@ -53,7 +53,7 @@ generarPreguntas().then(function(data) {
     //Estas funciones sirven para checkear la correcta y que el contador sume:
     let botones = document.querySelectorAll("button");
     for(let i=0;i<botones.length;i++){
-        botones[i].onclick = respuestasclick;
+        botones[i].onclick = respuestasclick; 
     }
     function respuestasclick(){
         for (let i = 0; i < results.length; i++) {
@@ -67,6 +67,11 @@ generarPreguntas().then(function(data) {
     document.getElementById("form1").addEventListener("click", function suma(e){
         e.preventDefault();
 
+        //Este if hace que cuando lleguemos a la pregunta 9 me redirija a la página results.html
+        if (numero>9) {
+            setTimeout( function() { window.location.href = "results.html"; }, 0 ); 
+        }
+     
         numero++;
         console.log(numero);
         escogerPreguntas(numero);
@@ -76,5 +81,24 @@ generarPreguntas().then(function(data) {
         console.log(lista);
 
         console.log(respuestasCorrectas);
+
+
+        //Obtenemos la Fecha y la hora, y la guardamos en un JSON para meterlas en localStorage.
+        let date = new Date();
+        let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()+" a las "+date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+        let puntuacionYFecha = [
+            {
+                "puntuacion": `${respuestasCorrectas}`,
+                "fecha": `${save}`
+            }
+        ]   
+        localStorage.setItem("usuario", JSON.stringify(puntuacionYFecha));
     });
 })
+
+
+//Traemos el resultado parseado y lo pintamos en el DOM de results.html
+let datostraidos = JSON.parse(localStorage.getItem("usuario"));
+document.getElementById("resultados").innerHTML = `Has acertado: ${datostraidos[0].puntuacion}`;
+
