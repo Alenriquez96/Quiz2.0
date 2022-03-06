@@ -33,6 +33,10 @@ h2{
   margin: 7px 0;
 }
 
+h3{
+  font-family: 'Bebas Neue', cursive;
+}
+
 fieldset{
     display: flex;
     flex-direction: column;
@@ -56,6 +60,26 @@ form{
 }
 #divHome2{
   height: 50vh;
+
+}
+
+#divGoogle{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* #google{
+  
+} */
+
+
+
+
+#comenzar{
+  display: none;
 
 }
 
