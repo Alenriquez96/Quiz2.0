@@ -68,7 +68,7 @@ generarPreguntas().then(function(data) {
         e.preventDefault();
 
         //Este if hace que cuando lleguemos a la pregunta 9 me redirija a la página results.html
-        if (numero>9) {
+        if (numero>=9) {
             setTimeout( function() { window.location.href = "results.html"; }, 0 ); 
         }
      
@@ -98,7 +98,5 @@ generarPreguntas().then(function(data) {
 })
 
 
-//Traemos el resultado parseado y lo pintamos en el DOM de results.html
-let datostraidos = JSON.parse(localStorage.getItem("usuario"));
-document.getElementById("resultados").innerHTML = `Has acertado: ${datostraidos[0].puntuacion}`;
+
 
