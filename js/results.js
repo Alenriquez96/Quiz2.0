@@ -1,27 +1,28 @@
 //Traemos el resultado parseado y lo pintamos en el DOM de results.html
-let datostraidos = JSON.parse(localStorage.getItem("usuario"));
-document.getElementById("resultados").innerHTML = `Has acertado: ${datostraidos[0].puntuacion}`;
+let datostraidos = JSON.parse(localStorage.getItem("email"));
+document.getElementById("resultados").innerHTML = `Has acertado: ${datostraidos[0].Puntuacion}`;
 
 
-//---------------Intento de almacenar puntuacion--------------------//
-const aciertos = (puntuacion) => {
-    firebase
-      .auth()
-      .createUserWithScore(puntuacion)
-      .then((userCredential) => {
-        // Signed in
-        let user = userCredential.user;
-        console.log(`se ha registrado ${user.datostraidos[0].puntuacion} ID:${user.uid}`)
-        // ...
-        // Guarda El usuario en Firestore
-        createUser({
-          id:user.uid,
-          puntuacion: user.datostraidos[0].puntuacion
-        });
-      })
-      .catch((error) => {
-        let errorCode = error.code;
-        let errorMessage = error.message;
-        console.log("Error en el sistema"+errorMessage);
-      });
-  };
+//------------INtento de actualizar datos----------------------//
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCtrwnz2oq0OR-CgpNNXntnUoES7LcZ7GQ",
+  authDomain: "quiz2-28eff.firebaseapp.com",
+  projectId: "quiz2-28eff",
+  storageBucket: "quiz2-28eff.appspot.com",
+  messagingSenderId: "957618801231",
+  appId: "1:957618801231:web:47bbe716a3abb9ab45b83a"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();// db representa mi BBDD
+const createUser = (user) => {
+db.collection("score")
+  .add(user)
+  .then((docRef) => console.log("Document written with ID: ", docRef.id))
+  .catch((error) => console.error("Error adding document: ", error));
+};
+const ref = db.collection('score').doc();
+ref.set({"email": datostraidos[0].email,
+  "fecha": datostraidos[0].Fecha,
+  "Puntuacion": datostraidos[0].Puntuacion});

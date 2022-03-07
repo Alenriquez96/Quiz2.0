@@ -1,3 +1,17 @@
+//Este es nuestro contador de respuestas correctas:
+let respuestasCorrectas=0;
+//numero que iremos aumentando
+let numero = 0;
+//Esta lista nos sirve para cambiar el orden de las respuestas de forma que no esté la correcta siempre en la misma posición:
+let lista = [1,3,2,0];
+lista=lista.sort(function(){return Math.random()-0.5});        
+
+
+//Traemos los datos del localstorage
+let datostraidos = JSON.parse(localStorage.getItem("email"));
+console.log(datostraidos);
+
+
 async function generarPreguntas() {
     let f = await fetch ("https://opentdb.com/api.php?amount=10&type=multiple")
     let data = await f.json()
@@ -14,18 +28,14 @@ generarPreguntas().then(function(data) {
     //Mapeamos los titulos de las preguntas para después pintarlas en el DOM:
     let preguntas = results.map(x=>x.question);
     console.log(preguntas);
+
   
     //Hacemos una función que pinte los títulos y le pasamos por parámetro un número que vaya subiendo a través del addeventlistener:
-    let numero = 0;
     function escogerPreguntas(n) {
         let h2 = document.getElementById("h2")
         h2.innerHTML = preguntas[n]; 
     }
     escogerPreguntas(numero);
-
-    //Esta lista nos sirve para cambiar el orden de las respuestas de forma que no esté la correcta siempre en la misma posición:
-    let lista = [1,3,2,0];
-    lista=lista.sort(function(){return Math.random()-0.5});
     
     //Hacemos una función que pinte las respuestas, y a través de templates le pasamos la lista desordenada, además le pasamos un value:
     function escogerRespuestas(n,o) {
@@ -47,9 +57,6 @@ generarPreguntas().then(function(data) {
     }
     escogerRespuestas(results[numero].incorrect_answers, results[numero].correct_answer);
 
-    //Este es nuestro contador de respuestas correctas:
-    let respuestasCorrectas=0;
-
     //Estas funciones sirven para checkear la correcta y que el contador sume:
     let botones = document.querySelectorAll("button");
     for(let i=0;i<botones.length;i++){
@@ -63,16 +70,17 @@ generarPreguntas().then(function(data) {
         }
     }
 
+
     //Nuestro addeventlistener que tendrá dentro: el número para que suba con cada click y las llamadas a las funciones:
     document.getElementById("form1").addEventListener("click", function suma(e){
         e.preventDefault();
+        numero++;
 
         //Este if hace que cuando lleguemos a la pregunta 9 me redirija a la página results.html
-        if (numero>=9) {
-            setTimeout( function() { window.location.href = "results.html"; }, 0 ); 
+        if (numero>9) {             
+            setTimeout( function() { window.location.href = "results.html"; }, 0 );
         }
-     
-        numero++;
+        
         console.log(numero);
         escogerPreguntas(numero);
         escogerRespuestas(results[numero].incorrect_answers,results[numero].correct_answer);
@@ -80,20 +88,11 @@ generarPreguntas().then(function(data) {
 
         console.log(lista);
 
-        console.log(respuestasCorrectas);
-
-
-        //Obtenemos la Fecha y la hora, y la guardamos en un JSON para meterlas en localStorage.
-        let date = new Date();
-        let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()+" a las "+date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-
-        let puntuacionYFecha = [
-            {
-                "puntuacion": `${respuestasCorrectas}`,
-                "fecha": `${save}`
-            }
-        ]   
-        localStorage.setItem("usuario", JSON.stringify(puntuacionYFecha));
+        console.log(respuestasCorrectas); 
+        
+        datostraidos[0].Puntuacion=respuestasCorrectas;
+        console.log(datostraidos);
+        localStorage.setItem("email",JSON.stringify(datostraidos));
     });
 })
 

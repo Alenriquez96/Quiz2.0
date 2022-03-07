@@ -1,4 +1,8 @@
-       //----------------------FIREBASE AUTH GOOGLE-------------------------//
+//Obtenemos la Fecha y la hora, y la guardamos en un JSON para meterlas en localStorage.
+let date = new Date();
+let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()+" a las "+date.getHours() + ":" + date.getMinutes();
+     
+     //----------------------FIREBASE AUTH GOOGLE-------------------------//
 
     const firebaseConfig = {
         apiKey: "AIzaSyCtrwnz2oq0OR-CgpNNXntnUoES7LcZ7GQ",
@@ -96,7 +100,14 @@
       }
       check(email,pass);
       //<---código de validación de email y contraseñas--->//
+      let correo =[
+        {
+          "email": document.getElementById("email").value,
+          "Fecha": save
+        }
+      ];
 
+      localStorage.setItem("email", JSON.stringify(correo));
   })
 
 //LOGUEARSE
@@ -138,12 +149,12 @@ const signOut = () => {
 document.getElementById("salir").addEventListener("click", signOut);
 
 
-// // Listener de usuario en el ssitema
-//   // Controlar usuario logado
-//   firebase.auth().onAuthStateChanged(function(user) {
-//     if (user) {
-//       console.log(`Está en el sistema:${user.email} ${user.uid}`);
-//     } else {
-//       console.log("no hay usuarios en el sistema");
-//     }
-//   });
+
+
+
+
+
+
+
+
+
