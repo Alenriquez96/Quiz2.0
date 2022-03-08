@@ -32,6 +32,16 @@ let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear
         try{
             const response = await firebase.auth().signInWithPopup(provider);
             console.log(response);
+            console.log(response.additionalUserInfo);
+            let emailAuth = response.additionalUserInfo.profile.email;
+            let correo =[
+              {
+                "email": response.additionalUserInfo.profile.email,
+                "Fecha": save
+              }
+            ];
+      
+            localStorage.setItem("email", JSON.stringify(correo));
             return response.user;
         }catch(error){
             throw new Error(error);
@@ -134,7 +144,15 @@ document.getElementById("form2").addEventListener("submit",function(event){
   event.preventDefault();
   let email = event.target.elements.email2.value;
   let pass = event.target.elements.pass3.value;
-  signInUser(email,pass)
+  signInUser(email,pass);
+  let correo =[
+    {
+      "email": document.getElementById("email2").value,
+      "Fecha": save
+    }
+  ];
+
+  localStorage.setItem("email", JSON.stringify(correo));
 })
 
 //DESLOGUEARSE
