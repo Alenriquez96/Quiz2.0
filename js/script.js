@@ -5,8 +5,6 @@ let numero = 0;
 //Esta lista nos sirve para cambiar el orden de las respuestas de forma que no esté la correcta siempre en la misma posición:
 let lista = [1,3,2,0];
 lista=lista.sort(function(){return Math.random()-0.5});        
-
-
 //Traemos los datos del localstorage
 let datostraidos = JSON.parse(localStorage.getItem("email"));
 console.log(datostraidos);
@@ -26,7 +24,7 @@ generarPreguntas().then(function(data) {
     console.log(correctas);
 
     //Mapeamos los titulos de las preguntas para después pintarlas en el DOM:
-    let preguntas = results.map(x=>x.question);
+    let preguntas = results.map(title=>title.question);
     console.log(preguntas);
 
   
@@ -74,7 +72,7 @@ generarPreguntas().then(function(data) {
     //Nuestro addeventlistener que tendrá dentro: el número para que suba con cada click y las llamadas a las funciones:
     document.getElementById("form1").addEventListener("click", function suma(e){
         e.preventDefault();
-        numero++;
+        numero+=1;
 
         //Este if hace que cuando lleguemos a la pregunta 9 me redirija a la página results.html
         if (numero>9) {             
@@ -91,7 +89,7 @@ generarPreguntas().then(function(data) {
         console.log(respuestasCorrectas); 
         
         datostraidos[0].Puntuacion=respuestasCorrectas;
-        console.log(datostraidos);
+        
         localStorage.setItem("email",JSON.stringify(datostraidos));
     });
 })
