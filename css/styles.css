@@ -1,7 +1,6 @@
 /* Estilos generales */
 *{
     box-sizing: border-box;
-    flex-wrap: nowrap;
 }
 
 body {
@@ -43,6 +42,7 @@ fieldset{
     align-items: center;
     justify-content: center;  
     width: 70vh;  
+    border: none;
 }
 
 form{
@@ -50,6 +50,37 @@ form{
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 10px;
+  font-family: 'Bebas Neue', cursive;
+
+  position: relative;
+  width: 350px;
+  height: 550px;
+  background: #fff706;
+  border-radius: 25%;
+  box-shadow: 20px 20px rgba(0,0,0,.15);
+  transition: all .4s ease;
+}
+#enviarForm1, #enviarForm2{
+  font-family: 'Bebas Neue', cursive;
+  cursor: pointer;
+  width: 25%;
+}
+#form2>p>a{
+  text-decoration: none;
+  color: purple;
+}
+#form2>p{
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+form:hover{
+  box-shadow: 10px 10px rgba(0,0,0,.25);
+}
+
+form>input{
+  border-radius: 17px;
 }
 
 #divHome1{
@@ -69,27 +100,49 @@ form{
   align-items: center;
   justify-content: center;
 }
-
-
-/* #google{
-  
-} */
-
-
-
+#divGoogle>h3{
+  margin-top: 40px;
+  margin-bottom: 0;
+}
 
 #comenzar{
   display: none;
 
 }
 
+#logout{
+  display: none;
+}
+
+#logout>h3{
+  margin-top: 40px;
+  margin-bottom: 0;
+}
+
+#divResults{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#resultados{
+  font-family: 'Bebas Neue', cursive;
+  font-size: 40px;
+  text-align: center;
+  margin: 30px;
+}
+#span{
+  color: rgb(233, 15, 142);
+  font-size: 50px;
+  
+}
 
 /* Estilos de los botones */
   button, button::after {
     margin-top: 10px;
-    width: 380px;
+    width: 300px;
     height: 86px;
-    font-size: 36px;
+    font-size: 24px;
     font-family: 'Bebas Neue', cursive;
     background: linear-gradient(45deg, transparent 5%, #FF013C 5%);
     border: 0;
@@ -100,6 +153,7 @@ form{
     outline: transparent;
     position: relative;
     cursor: pointer;
+    
   }
   
   button::after {
@@ -176,5 +230,31 @@ form{
     100% {
       clip-path: var(--slice-1);
       transform: translate(0);
+    }
+  }
+
+
+
+  /* //MEDIA QUERIES */
+
+  @media only screen and (min-width: 500px){
+    form{
+      width: 480px;
+    }
+
+    button{
+      width: 320px;
+      font-size: 33px;
+    }
+  }
+
+  @media only screen and (min-width: 840px) {
+    form{
+      width: 750px;
+    }
+
+    button{
+      width: 500px;
+      font-size: 46px;
     }
   }

@@ -1,8 +1,11 @@
 //Obtenemos la Fecha y la hora, y la guardamos en un JSON para meterlas en localStorage.
 let date = new Date();
 let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()+" a las "+date.getHours() + ":" + date.getMinutes();
-     
-     //----------------------FIREBASE AUTH GOOGLE-------------------------//
+
+let datostraidos = JSON.parse(localStorage.getItem("email"));
+
+
+     //----------------------FIREBASE INITIALIZE-------------------------//
 
     const firebaseConfig = {
         apiKey: "AIzaSyCtrwnz2oq0OR-CgpNNXntnUoES7LcZ7GQ",
@@ -23,6 +26,8 @@ let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear
     };
 
 
+         //----------------------FIREBASE AUTH CON GOOGLE-------------------------//
+
     //PASOS PARA QUE SALGA EL LOG CON GOOGLE
     let provider = new firebase.auth.GoogleAuthProvider();
 
@@ -36,12 +41,98 @@ let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear
             let emailAuth = response.additionalUserInfo.profile.email;
             let correo =[
               {
-                "email": response.additionalUserInfo.profile.email,
+                "email": emailAuth,
                 "Fecha": save
               }
             ];
       
             localStorage.setItem("email", JSON.stringify(correo));
+
+            document.getElementById("logout").style.display = "flex";
+            document.getElementById("logout").style.justifyContent = "center";
+            document.getElementById("logout").style.flexDirection = "column";
+            document.getElementById("logout").style.alignItems = "center";
+            document.getElementById("form1").style.display = "none"
+            document.getElementById("form2").style.display = "none"
+
+//--------------------------------PRIMERA gRÁFICA: ULTIMAS PARTIDAS JUGADAS------------------------------------//
+
+            let puntuaciones = [];
+            let fechas = [];
+            async function recuperarDatos() {
+              await db.collection("score")
+                .where("email", "==", datostraidos[0].email)
+                .limit(5)
+          
+                .get()
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    puntuaciones.push(doc.data().Puntuacion);
+                    fechas.push(doc.data().fecha);
+                  });
+                })
+                .catch((error) => {
+                  console.log("Error getting documents: ", error);
+                });
+            }
+            recuperarDatos().then(() => {
+              crearGrafico(puntuaciones, fechas)
+            });
+          
+            function crearGrafico(puntuaciones, fechas){
+              new Chartist.Bar(
+                ".ct-chart",
+                {
+                  labels: fechas,
+                  series: [puntuaciones],
+                },
+                {
+                  seriesBarDistance: 10,
+                  low: 0,
+                  high: 10,
+                }
+              );            
+            }
+
+            //------------------------SEGUNDA GRÁFICA: RANKING DE PARTIDAS----------------------------//
+            puntuaciones1=[];
+            emails=[];
+
+            async function recuperarDatos2() {
+              await db.collection("score")
+                .orderBy("Puntuacion","desc")
+                .limit(10)
+                .get()
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    puntuaciones1.push(doc.data().Puntuacion);
+                    emails.push(doc.data().email);
+                  });
+                })
+                .catch((error) => {
+                  console.log("Error getting documents: ", error);
+                });
+            }
+            recuperarDatos2().then(() => {
+              crearGrafico1(puntuaciones1, emails)
+            });
+
+            function crearGrafico1(puntuaciones1, emails){
+            console.log(puntuaciones1)
+              new Chartist.Bar(
+                ".ct-chart1",
+                {
+                  labels: emails,
+                  series: [puntuaciones1],
+                },
+                {
+                  seriesBarDistance: 1,
+                  low: 0,
+                  high: 10,
+                }
+              );
+            }
+
             return response.user;
         }catch(error){
             throw new Error(error);
@@ -82,6 +173,8 @@ let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear
           id:user.uid,
           email:user.email
         });
+
+        document.getElementById("form1").style.display = "none";
       })
       .catch((error) => {
         let errorCode = error.code;
@@ -98,14 +191,17 @@ let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear
       function check(emailtxt,passtxt){
         let reEmail = /[0-9a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/
         let rePass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+        
         if(reEmail.test(emailtxt) === true && rePass.test(passtxt) === true && pass===pass2){
           signUpUser(email,pass)
-        } else if(reEmail.test(emailtxt) === false){
-          alert("Email no válido")
+        } else if (pass == 0 || pass2 == 0 || email == 0) {
+          alert("No pueden quedar campos vacios");
+        }else if(reEmail.test(emailtxt) === false){
+          alert("Email no válido. Debe contener un @ y un .")
         } else if(pass != pass2){
           alert("Las contraseñas no coinciden")
         } else if(rePass.test(passtxt) === false){
-          alert("la contraseña es demasiado débil")
+          alert("la contraseña es demasiado débil. Debe contener un carácter minúsculo, otro mayúsculo, uno alfanumérico y un símbolo especial(*#$%&)")
         }
       }
       check(email,pass);
@@ -131,6 +227,18 @@ let save = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear
         console.log(user);
         document.getElementById("comenzar").style.display = "flex";
         document.getElementById("comenzar").style.justifyContent = "center"; 
+
+        document.getElementById("logout").style.display = "flex";
+        document.getElementById("logout").style.justifyContent = "center";
+        document.getElementById("logout").style.flexDirection = "column";
+        document.getElementById("logout").style.alignItems = "center";
+
+        document.getElementById("divGoogle").style.display = "none";
+        document.getElementById("form1").style.display = "none";
+        document.getElementById("form2").style.display = "none";
+
+
+        
       })
       .catch((error) => {
         let errorCode = error.code;
@@ -153,7 +261,86 @@ document.getElementById("form2").addEventListener("submit",function(event){
   ];
 
   localStorage.setItem("email", JSON.stringify(correo));
+
+
+  //-----------------------------PRIMERA grÄFICA: ULTIMAS PARTIDAS JUGADAS--------------------------------//
+  let puntuaciones = [];
+  let fechas = [];
+  async function recuperarDatos() {
+    await db.collection("score")
+      .where("email", "==", datostraidos[0].email)
+      .limit(5)
+
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          puntuaciones.push(doc.data().Puntuacion);
+          fechas.push(doc.data().fecha);
+        });
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+  }
+  recuperarDatos().then(() => {
+    crearGrafico(puntuaciones, fechas)
+  });
+
+  function crearGrafico(puntuaciones, fechas){
+    new Chartist.Bar(
+      ".ct-chart",
+      {
+        labels: fechas,
+        series: [puntuaciones],
+      },
+      {
+        seriesBarDistance: 10,
+        low: 0,
+        high: 10,
+      }
+    );
+  }
+
+  //------------------------SEGUNDA GRÁFICA: RANKING DE PARTIDAS----------------------------//
+  puntuaciones1=[];
+  emails=[];
+
+  async function recuperarDatos2() {
+    await db.collection("score")
+      .orderBy("Puntuacion","desc")
+      .limit(10)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          puntuaciones1.push(doc.data().Puntuacion);
+          emails.push(doc.data().email);
+        });
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+  }
+  recuperarDatos2().then(() => {
+    crearGrafico1(puntuaciones1, emails)
+  });
+
+  function crearGrafico1(puntuaciones1, emails){
+  console.log(puntuaciones1)
+    new Chartist.Bar(
+      ".ct-chart1",
+      {
+        labels: emails,
+        series: [puntuaciones1],
+      },
+      {
+        seriesBarDistance: 1,
+        low: 0,
+        high: 10,
+      }
+    );
+  }
 })
+
 
 //DESLOGUEARSE
 const signOut = () => {
@@ -165,14 +352,3 @@ const signOut = () => {
     });
 }
 document.getElementById("salir").addEventListener("click", signOut);
-
-
-
-
-
-
-
-
-
-
-
