@@ -3,7 +3,7 @@ let datostraidos = JSON.parse(localStorage.getItem("email"));
 document.getElementById("resultados").innerHTML = `Has acertado: <span id="span">${datostraidos[0].Puntuacion}</span>`;
 
 
-//------------INtento de actualizar datos----------------------//
+//------------Actualizar datos firebase----------------------//
 
 const firebaseConfig = {
   apiKey: "AIzaSyCtrwnz2oq0OR-CgpNNXntnUoES7LcZ7GQ",

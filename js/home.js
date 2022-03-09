@@ -36,8 +36,6 @@ let datostraidos = JSON.parse(localStorage.getItem("email"));
     async function login (){
         try{
             const response = await firebase.auth().signInWithPopup(provider);
-            console.log(response);
-            console.log(response.additionalUserInfo);
             let emailAuth = response.additionalUserInfo.profile.email;
             let correo =[
               {
@@ -118,7 +116,6 @@ let datostraidos = JSON.parse(localStorage.getItem("email"));
             });
 
             function crearGrafico1(puntuaciones1, emails){
-            console.log(puntuaciones1)
               new Chartist.Bar(
                 ".ct-chart1",
                 {
@@ -133,6 +130,8 @@ let datostraidos = JSON.parse(localStorage.getItem("email"));
               );
             }
 
+            document.getElementById("h3gr1").style.display="block";
+            document.getElementById("h3gr2").style.display="block";
             return response.user;
         }catch(error){
             throw new Error(error);
@@ -224,7 +223,7 @@ let datostraidos = JSON.parse(localStorage.getItem("email"));
         let user = userCredential.user;
         console.log(`se ha logado ${user.email} ID:${user.uid}`)
         alert(`se ha logado ${user.email} ID:${user.uid}`)
-        console.log(user);
+
         document.getElementById("comenzar").style.display = "flex";
         document.getElementById("comenzar").style.justifyContent = "center"; 
 
@@ -236,6 +235,84 @@ let datostraidos = JSON.parse(localStorage.getItem("email"));
         document.getElementById("divGoogle").style.display = "none";
         document.getElementById("form1").style.display = "none";
         document.getElementById("form2").style.display = "none";
+
+//-----------------------------PRIMERA grÄFICA: ULTIMAS PARTIDAS JUGADAS--------------------------------//
+        let puntuaciones = [];
+        let fechas = [];
+        async function recuperarDatos() {
+          await db.collection("score")
+            .where("email", "==", datostraidos[0].email)
+            .limit(5)
+
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                puntuaciones.push(doc.data().Puntuacion);
+                fechas.push(doc.data().fecha);
+              });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+            });
+        }
+        recuperarDatos().then(() => {
+          crearGrafico(puntuaciones, fechas)
+        });
+
+        function crearGrafico(puntuaciones, fechas){
+          new Chartist.Bar(
+            ".ct-chart",
+            {
+              labels: fechas,
+              series: [puntuaciones],
+            },
+            {
+              seriesBarDistance: 10,
+              low: 0,
+              high: 10,
+            }
+          );
+        }
+
+        //------------------------SEGUNDA GRÁFICA: RANKING DE PARTIDAS----------------------------//
+        puntuaciones1=[];
+        emails=[];
+
+        async function recuperarDatos2() {
+          await db.collection("score")
+            .orderBy("Puntuacion","desc")
+            .limit(10)
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                puntuaciones1.push(doc.data().Puntuacion);
+                emails.push(doc.data().email);
+              });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+            });
+        }
+        recuperarDatos2().then(() => {
+          crearGrafico1(puntuaciones1, emails)
+        });
+
+        function crearGrafico1(puntuaciones1, emails){
+          new Chartist.Bar(
+            ".ct-chart1",
+            {
+              labels: emails,
+              series: [puntuaciones1],
+            },
+            {
+              seriesBarDistance: 1,
+              low: 0,
+              high: 10,
+            }
+          );
+        }
+        document.getElementById("h3gr1").style.display="block";
+        document.getElementById("h3gr2").style.display="block";
 
 
         
@@ -262,83 +339,6 @@ document.getElementById("form2").addEventListener("submit",function(event){
 
   localStorage.setItem("email", JSON.stringify(correo));
 
-
-  //-----------------------------PRIMERA grÄFICA: ULTIMAS PARTIDAS JUGADAS--------------------------------//
-  let puntuaciones = [];
-  let fechas = [];
-  async function recuperarDatos() {
-    await db.collection("score")
-      .where("email", "==", datostraidos[0].email)
-      .limit(5)
-
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          puntuaciones.push(doc.data().Puntuacion);
-          fechas.push(doc.data().fecha);
-        });
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-  }
-  recuperarDatos().then(() => {
-    crearGrafico(puntuaciones, fechas)
-  });
-
-  function crearGrafico(puntuaciones, fechas){
-    new Chartist.Bar(
-      ".ct-chart",
-      {
-        labels: fechas,
-        series: [puntuaciones],
-      },
-      {
-        seriesBarDistance: 10,
-        low: 0,
-        high: 10,
-      }
-    );
-  }
-
-  //------------------------SEGUNDA GRÁFICA: RANKING DE PARTIDAS----------------------------//
-  puntuaciones1=[];
-  emails=[];
-
-  async function recuperarDatos2() {
-    await db.collection("score")
-      .orderBy("Puntuacion","desc")
-      .limit(10)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          puntuaciones1.push(doc.data().Puntuacion);
-          emails.push(doc.data().email);
-        });
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-  }
-  recuperarDatos2().then(() => {
-    crearGrafico1(puntuaciones1, emails)
-  });
-
-  function crearGrafico1(puntuaciones1, emails){
-  console.log(puntuaciones1)
-    new Chartist.Bar(
-      ".ct-chart1",
-      {
-        labels: emails,
-        series: [puntuaciones1],
-      },
-      {
-        seriesBarDistance: 1,
-        low: 0,
-        high: 10,
-      }
-    );
-  }
 })
 
 
