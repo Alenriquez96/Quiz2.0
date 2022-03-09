@@ -136,6 +136,12 @@ form>input{
   font-size: 50px;
   
 }
+#h3gr1{
+  display: none;
+}
+#h3gr2{
+  display: none;
+}
 
 /* Estilos de los botones */
   button, button::after {

@@ -7,8 +7,6 @@ let lista = [1,3,2,0];
 lista=lista.sort(function(){return Math.random()-0.5});        
 //Traemos los datos del localstorage
 let datostraidos = JSON.parse(localStorage.getItem("email"));
-console.log(datostraidos);
-
 
 async function generarPreguntas() {
     let f = await fetch ("https://opentdb.com/api.php?amount=10&type=multiple")
@@ -19,39 +17,34 @@ async function generarPreguntas() {
 generarPreguntas().then(function(data) {
     let results = data.results;
     
-    //Mapeamos las correctas para hacer log y que nos diga cuales son:
-    let correctas = results.map(x=>x.correct_answer);
-    console.log(correctas);
-
     //Mapeamos los titulos de las preguntas para después pintarlas en el DOM:
     let preguntas = results.map(title=>title.question);
-    console.log(preguntas);
 
   
     //Hacemos una función que pinte los títulos y le pasamos por parámetro un número que vaya subiendo a través del addeventlistener:
-    function escogerPreguntas(n) {
+    function escogerPreguntas(incremento) {
         let h2 = document.getElementById("h2")
-        h2.innerHTML = preguntas[n]; 
+        h2.innerHTML = preguntas[incremento]; 
     }
     escogerPreguntas(numero);
     
     //Hacemos una función que pinte las respuestas, y a través de templates le pasamos la lista desordenada, además le pasamos un value:
-    function escogerRespuestas(n,o) {
+    function escogerRespuestas(incorrecta,correcta) {
         let label0 = document.getElementById(`label${lista[0]}`)
-        label0.innerHTML = n[0];
-        label0.value = n[0];
+        label0.innerHTML = incorrecta[0];
+        label0.value = incorrecta[0];
         
         let label1 = document.getElementById(`label${lista[1]}`)
-        label1.innerHTML = n[1];
-        label1.value = n[1];
+        label1.innerHTML = incorrecta[1];
+        label1.value = incorrecta[1];
 
         let label2 = document.getElementById(`label${lista[2]}`)
-        label2.innerHTML = n[2];
-        label2.value = n[2];
+        label2.innerHTML = incorrecta[2];
+        label2.value = incorrecta[2];
 
         let label3 = document.getElementById(`label${lista[3]}`)
-        label3.innerHTML = o;
-        label3.value = o;
+        label3.innerHTML = correcta;
+        label3.value = correcta;
     }
     escogerRespuestas(results[numero].incorrect_answers, results[numero].correct_answer);
 
@@ -81,16 +74,8 @@ generarPreguntas().then(function(data) {
             localStorage.setItem("email",JSON.stringify(datostraidos));
         }
         
-        console.log(numero);
         escogerPreguntas(numero);
         escogerRespuestas(results[numero].incorrect_answers,results[numero].correct_answer);
         lista=lista.sort(function(){return Math.random()-0.5});
-
-        console.log(lista);
-        console.log(respuestasCorrectas); 
     });
 })
-
-
-
-
