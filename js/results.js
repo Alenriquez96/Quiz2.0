@@ -1,6 +1,6 @@
 //Traemos el resultado parseado y lo pintamos en el DOM de results.html
 let datostraidos = JSON.parse(localStorage.getItem("email"));
-document.getElementById("resultados").innerHTML = `Has acertado: ${datostraidos[0].Puntuacion}`;
+document.getElementById("resultados").innerHTML = `Has acertado: <span id="span">${datostraidos[0].Puntuacion}</span>`;
 
 
 //------------INtento de actualizar datos----------------------//

@@ -77,6 +77,8 @@ generarPreguntas().then(function(data) {
         //Este if hace que cuando lleguemos a la pregunta 9 me redirija a la página results.html
         if (numero>9) {             
             setTimeout( function() { window.location.href = "results.html"; }, 0 );
+            datostraidos[0].Puntuacion=respuestasCorrectas;
+            localStorage.setItem("email",JSON.stringify(datostraidos));
         }
         
         console.log(numero);
@@ -85,12 +87,7 @@ generarPreguntas().then(function(data) {
         lista=lista.sort(function(){return Math.random()-0.5});
 
         console.log(lista);
-
         console.log(respuestasCorrectas); 
-        
-        datostraidos[0].Puntuacion=respuestasCorrectas;
-        
-        localStorage.setItem("email",JSON.stringify(datostraidos));
     });
 })
 
